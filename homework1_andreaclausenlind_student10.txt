@@ -1,8 +1,283 @@
-#-----------------Homework-------------------------------------
-#-----------------Task 1---------------------------------------
-How many genes are on chromosome II in saccharomyces_cerevisiae_R64-2-1_20150113.gff? 
-Note that the chromosome column is followed by a TAB charachter, which is encoded as 
-\t (without quotes).
+#-----------------Contents-------------------------------------
+# Section 1: homework1
+# Section 2: Introduction tasks
 
-#---------------- Solution Task 1------------------------------
-# 
+
+#-----------------Homework1(student10)-------------------------
+# Task 1
+# How many genes are on chromosome II in saccharomyces_cerevisiae_R64-2-1_20150113.gff? 
+# Note that the chromosome column is followed by a TAB charachter, which is encoded as \t (without quotes).
+
+# Make homwork1 directory in student10 directory
+mkdir homework1
+
+# Copy saccharomyces_cerevisiae_R64-2-1_20150113.gff file from data directory to homework directory
+cp 
+
+# Count number of genes in chromosome II by first isolating lines from chromosome II (grep -w chrII), then isolating column 3 with type specification (cut -f 3), then isolating all lines with type "gene" (grep -w gene) and lastly counting these lines (wc -l)
+grep -w chrII saccharomyces_cerevisiae_R64-2-1_20150113.gff | cut -f 3 | grep -w gene | wc -l
+
+# Output
+456
+
+# Task 2
+# Copy S288C_reference_sequence_R64-2-1_20150113.fsa from data foler to homework1 folder (when in homework1 folder)
+cp ../data/S288C_reference_sequence_R64-2-1_20150113.fsa .
+
+# Count CG content in S288C_reference_sequence_R64-2-1_20150113.fsa (Not accounting for Ns!)
+# Isolate all lines NOT starting with '>' using grep inverse (grep -v '>') 
+# For total read length, remove line breaks (tr -d '\n') and count the number of characters (wc -m). Save to file GCcontent.
+# For CG content, remove new lines as well as As and Ts (tr 'AT\n') and count the remaining chracters (wc -m). Add to file GC contents.
+grep -v '>' S288C_reference_sequence_R64-2-1_20150113.fsa | tr -d '\n' | wc -m > GCcontent
+grep -v '>' S288C_reference_sequence_R64-2-1_20150113.fsa | tr -d 'AT\n' | wc -m >> GCcontent
+cat GCcontent
+
+# Output 
+12157105
+4637676
+
+# Which gives 38.148%
+
+# Task 3
+# Download and decompress the ORFs of another strain (Y55) from https://downloads.yeastgenome.org/sequence/strains/Y55/Y55_SGD_2015_JRIF00000000/Y55_JRIF00000000_SGD_cds.fsa.gz
+wget https://downloads.yeastgenome.org/sequence/strains/Y55/Y55_SGD_2015_JRIF00000000/Y55_JRIF00000000_SGD_cds.fsa.gz
+
+# Unzip file
+gunzip Y55_JRIF00000000_SGD_cds.fsa.gz
+
+# Output 
+Y55_JRIF00000000_SGD_cds.fsa
+
+# A) Compare GC content to that of S.cerevisiae, perform same analysis of GC content sa in previous task. (Again disregarding Ns)
+grep -v '>' Y55_JRIF00000000_SGD_cds.fsa | tr -d '\n' | wc -m > GCcontent_Y55
+grep -v '>' Y55_JRIF00000000_SGD_cds.fsa | tr -d 'AT\n' | wc -m >> GCcontent_Y55
+cat GCcontent_Y55
+
+# Output
+8078658
+3196763
+
+# Which gives 39.57%
+
+# B) Count number of ORFS in Y55 and in reference genome. Single out lines with gene information (grep '>') and count the lines (wc -l)
+grep '>' Y55_JRIF00000000_SGD_cds.fsa | wc -l > ORFcount
+grep '>' orf_coding_all_R64-2-1_20150113.fasta | wc -l >> ORFcount
+cat ORFcount
+
+# Output
+5330
+6713
+
+# C) Count number of common ORFs between Y55_JRIF00000000_SGD_cds.fsa and orf_coding_all_R64-2-1_20150113.fasta
+# Make into table containing all non sequence information by making commas/ vertical bars into tabs
+grep '>' orf_coding_all_R64-2-1_20150113.fasta | cut -d ' ' -f 1 | tr -d '>' | sort > ORF_Scerevisiae.txt
+grep '>' Y55_JRIF00000000_SGD_cds.fsa | cut -d " " -f 1 | tr -d '>' | sed 's/\_Y55//' | grep -vw UNDEF | sort > ORFs_Y55.txt
+comm -12 ORFs_Y55.txt  ORF_Scerevisiae.txt | wc -l
+
+# Output 
+5168
+
+#----------------Introduction tasks-----------------------------
+#
+# Contents of current directiory
+ls
+
+# Output:
+# ~
+
+# Download a reference yeast genome as compressed archive to the current directory
+wget https://downloads.yeastgenome.org/sequence/S288C_reference/genome_releases/S288C_reference_genome_Current_Release.tgz
+
+# Output:
+S288C_reference_genome_Current_Release.tgz
+
+# Decompress the archive (will create a new diretory) 
+# Look up -xzvf
+tar -xzvf S288C_reference_genome_Current_Release.tgz
+
+# Output:
+New directory: S288C_reference_genome_R64-2-1_20150113
+
+# List contents of current dir
+ls
+
+# Output:
+S288C_reference_genome_Current_Release.tgz
+S288C_reference_genome_R64-2-1_20150113
+
+# List contents of new directory
+ls ./S288C_reference_genome_R64-2-1_20150113
+
+# Output:
+NotFeature_R64-2-1_20150113.fasta
+S288C_reference_sequence_R64-2-1_20150113.fsa
+gene_association_R64-2-1_20150113.sgd
+orf_coding_all_R64-2-1_20150113.fasta
+orf_trans_all_R64-2-1_20150113.fasta
+other_features_genomic_R64-2-1_20150113.fasta
+rna_coding_R64-2-1_20150113.fasta
+saccharomyces_cerevisiae_R64-2-1_20150113.gff
+
+# Rename directory S288C_reference_genome_R64-2-1_20150113 to data
+mv S288C_reference_genome_R64-2-1_20150113 data
+ls
+
+# Output
+S288C_reference_genome_Current_Release.tgz  
+data
+
+# Check path to current working directory
+pwd
+
+# Output
+/home/student9
+
+# Move to data directory
+cd data
+pwd
+
+# Output
+/home/student9/data
+
+# Inspect contents of rna_coding_R64-2-1_20150113.fasta
+less rna_coding_R64-2-1_20150113.fasta
+(q to exit)
+
+Output: 
+Information on RNA sequences, ID, and function description
+
+# Create "results" directory with empty file counts.txt inside. Touch command changes time when dile was accessed, but also creates a file if not existent
+mkdir results
+touch results/counts.txt
+ls ./results
+pwd ./results
+
+# Output 
+counts.txt
+/home/student9/data
+
+# Timestamp results
+mv results results_2019_01_29
+ls
+
+# Output
+NotFeature_R64-2-1_20150113.fasta
+S288C_reference_sequence_R64-2-1_20150113.fsa
+gene_association_R64-2-1_20150113.sgd
+orf_coding_all_R64-2-1_20150113.fasta
+orf_trans_all_R64-2-1_20150113.fasta
+other_features_genomic_R64-2-1_20150113.fasta
+results_2019_01_29
+rna_coding_R64-2-1_20150113.fasta
+saccharomyces_cerevisiae_R64-2-1_20150113.gff
+
+# Analyze files
+# Count nr of lines in orf_coding_all_R64-2-1_20150113.fasta and orf_trans_all_R64-2-1_20150113.fasta
+wc orf_coding_all_R64-2-1_20150113.fasta orf_trans_all_R64-2-1_20150113.fasta -l
+
+# Output
+  161265 orf_coding_all_R64-2-1_20150113.fasta
+   60443 orf_trans_all_R64-2-1_20150113.fasta
+  221708 total
+
+# Count nr of genes in orf_coding_all_R64-2-1_20150113.fasta. Sequence strats with '>'. 
+grep '>' orf_coding_all_R64-2-1_20150113.fasta | wc -l
+
+# Output 
+6713
+
+# Save number of genes in counts file
+grep '>' orf_coding_all_R64-2-1_20150113.fasta | wc -l > results_2019_01_29/counts.txt
+
+# Write in file
+nano results_2019_01_29/counts.txt
+
+# Count nr of tRNA in orf_trans_all_R64-2-1_20150113.fasta
+grep '>' orf_trans_all_R64-2-1_20150113.fasta | wc -l 
+
+# Output
+6713
+
+# Add to (>>) counts.txt
+grep '>' orf_trans_all_R64-2-1_20150113.fasta | wc -l >> results_2019_01_29/counts.txt    
+nano results_2019_01_29/counts.txt    
+
+# Inspect counts.txt, small file so use cat
+cat results_2019_01_29/counts.txt
+
+# Make a copy of counts 
+cp counts.txt counts.txt.orig
+ls
+
+# Output
+counts.txt  counts.txt.orig
+
+# Working with text columns
+# move to data directory
+
+# gene experssion data (fold change)
+wget http://www.cbs.dtu.dk/courses/27619/ex1.dat
+
+# annotation
+wget http://www.cbs.dtu.dk/courses/27619/ex1.acc
+
+# Merge ex1.acc and ex1.dat
+paste ex1.acc ex1.dat > ex1.accdat
+
+# Count yeast-human orthologs 
+# Move to home directory
+cd
+
+# Download and decompress EggNOG (list of orthologous groups across eucaryotes)
+wget http://eggnog5.embl.de/download/eggnog_5.0/data/2759/2759_members.tsv.gz
+gunzip 2759_members.tsv.gz
+ls
+
+# Output
+2759_members.tsv  S288C_reference_genome_Current_Release.tgz  adv_bioinformatics  data
+
+# Want know that taxon id for H.sapiens == 9606 and S.cerevisiae == 4932
+# Use this to extract lines with proteins for each organism
+# Extract orthologous group IDs 
+# Sort list 
+# Save to a file
+# Pipeline structure: filter"TaxonID" | cut out column 2 | sort >RESULTS_FILE
+
+grep "4891." 2759_members.tsv | cut -f 2 | sort > groups_scerevisiae.txt
+grep "9606." 2759_members.tsv | cut -f 2 | sort > groups_hsapiens.txt
+
+# Inspect with less -S (does not do word wrap)
+less -S groups_hsapiens.txt
+less -S groups_scerevisiae.txt
+
+### Why did we use dot in filtering? 
+## Has to do with TaxonID.SequenceID? Cannot see any diifference in output files...
+
+# Find groups that exist in both human and yeast (produce intersection)
+# Use comm command, returns elements only present in 1, elements only present n 2 and common elements of two sorted lists
+# Count the lines (number of common groups)
+comm -12 groups_hsapiens.txt groups_scerevisiae.txt | wc -l
+
+# BONUS: Could also do all above in one go. Uses "<(command that yields text output)"
+comm -12 <(grep "4891." 2759_members.tsv | cut -f 2 | sort) <(grep "9606." 2759_members.tsv | cut -f 2 | sort) | wc -l
+
+-------------------------Produce complementary RNA sequence of a DNA string---------------
+# Move to s.cerevisiae data directory. Work with S288C_reference_genome_R64-2-1_20150113
+/orf_coding_all_R64-2-1_20150113.fasta
+
+# tr command ineffective, we will use sed
+# /y is for substitution
+# letters exchanged in order
+# /^>/! Says not to process fasta file headlines
+# sed '/^>/!y/ACGT/UGCA/' FILE > FILE_RNA
+
+sed '/^>/!y/ACGT/UGCA/' S288C_reference_genome_R64-2-1_20150113
+/orf_coding_all_R64-2-1_20150113.fasta > orf_coding_all_R64-2-1_20150113_RNA.fasta 
+
+# Output
+Successfully created orf_coding_all_R64-2-1_20150113_RNA.fasta in data folder
+
+
+
+
+
