@@ -78,7 +78,7 @@ comm -12 ORFs_Y55.txt  ORF_Scerevisiae.txt | wc -l
 5168
 
 #----------------Introduction tasks-----------------------------
-#
+# 1. Managing files
 # Contents of current directiory
 ls
 
@@ -171,7 +171,7 @@ results_2019_01_29
 rna_coding_R64-2-1_20150113.fasta
 saccharomyces_cerevisiae_R64-2-1_20150113.gff
 
-# Analyze files
+# 2. Analyze files
 # Count nr of lines in orf_coding_all_R64-2-1_20150113.fasta and orf_trans_all_R64-2-1_20150113.fasta
 wc orf_coding_all_R64-2-1_20150113.fasta orf_trans_all_R64-2-1_20150113.fasta -l
 
@@ -212,7 +212,8 @@ ls
 # Output
 counts.txt  counts.txt.orig
 
-# Working with text columns
+
+# 3. Working with text columns
 # move to data directory
 
 # gene experssion data (fold change)
@@ -224,7 +225,8 @@ wget http://www.cbs.dtu.dk/courses/27619/ex1.acc
 # Merge ex1.acc and ex1.dat
 paste ex1.acc ex1.dat > ex1.accdat
 
-# Count yeast-human orthologs 
+
+# 4. Count yeast-human orthologs 
 # Move to home directory
 cd
 
@@ -251,7 +253,7 @@ less -S groups_hsapiens.txt
 less -S groups_scerevisiae.txt
 
 ### Why did we use dot in filtering? 
-## Has to do with TaxonID.SequenceID? Cannot see any diifference in output files...
+## Has to do with TaxonID.SequenceID? Cannot see any difference in output files when testing...
 
 # Find groups that exist in both human and yeast (produce intersection)
 # Use comm command, returns elements only present in 1, elements only present n 2 and common elements of two sorted lists
@@ -261,7 +263,9 @@ comm -12 groups_hsapiens.txt groups_scerevisiae.txt | wc -l
 # BONUS: Could also do all above in one go. Uses "<(command that yields text output)"
 comm -12 <(grep "4891." 2759_members.tsv | cut -f 2 | sort) <(grep "9606." 2759_members.tsv | cut -f 2 | sort) | wc -l
 
--------------------------Produce complementary RNA sequence of a DNA string---------------
+
+# 5. Sequence processing
+# Produce complementary RNA sequence of a DNA string
 # Move to s.cerevisiae data directory. Work with S288C_reference_genome_R64-2-1_20150113
 /orf_coding_all_R64-2-1_20150113.fasta
 
