@@ -69,7 +69,9 @@ cat ORFcount
 6713
 
 # C) Count number of common ORFs between Y55_JRIF00000000_SGD_cds.fsa and orf_coding_all_R64-2-1_20150113.fasta
-# Make into table containing all non sequence information by making commas/ vertical bars into tabs
+# Reference: First isolate lines containing ORF information (grep '>'), then define column sepation as ' ' and isolate first column (cut -d " " -f 1). Delete all '>' (tr -d '>'). Sort files on alphabetic order (sort) and save in txt file.
+# Y55: same as for reference up to (tr -d '<'). Then suffix _Y55 is replaced by nothing (sed 's/\_Y55//'). Undefined ORFs are removed by isolating all lines not containing the word "UNDEF" (grep -vw UNDEF). Sort files on alphabetic order (sort) and save in txt file.
+# Find common genes by isolating only the lines containing common genes between two sorted ORF files (comm -12 FILE1 FILE2) and then by counting the lines (wc -l)
 grep '>' orf_coding_all_R64-2-1_20150113.fasta | cut -d ' ' -f 1 | tr -d '>' | sort > ORF_Scerevisiae.txt
 grep '>' Y55_JRIF00000000_SGD_cds.fsa | cut -d " " -f 1 | tr -d '>' | sed 's/\_Y55//' | grep -vw UNDEF | sort > ORFs_Y55.txt
 comm -12 ORFs_Y55.txt  ORF_Scerevisiae.txt | wc -l
